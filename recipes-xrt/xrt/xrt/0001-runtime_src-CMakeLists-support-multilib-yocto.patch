@@ -1,0 +1,111 @@
+From 15e39297b6f289b3be954763e0cd710474b4e717 Mon Sep 17 00:00:00 2001
+From: Pablo Rodriguez Quesada <pablo.rodriguez-quesada@windriver.com>
+Date: Wed, 1 Apr 2020 01:20:01 +0000
+Subject: [PATCH] runtime_src: CMakeLists support multilib yocto
+
+In Yocto when Multilib is enabled the recipe fails due to QA. ${libdir}
+should be used in the CMakeLists in order to support distributions that
+make use of lib64. Otherwise the paths are hardcoded and therefore wrong
+in some cases.
+
+Signed-off-by: Pablo Rodriguez Quesada <pablo.rodriguez-quesada@windriver.com>
+---
+ src/runtime_src/CMakeLists.txt                     | 2 +-
+ src/runtime_src/core/common/CMakeLists.txt         | 2 +-
+ src/runtime_src/core/edge/common_em/CMakeLists.txt | 2 +-
+ src/runtime_src/core/edge/hw_em/CMakeLists.txt     | 2 +-
+ src/runtime_src/core/edge/sw_em/CMakeLists.txt     | 2 +-
+ src/runtime_src/core/edge/user/CMakeLists.txt      | 2 +-
+ src/runtime_src/xdp/CMakeLists.txt                 | 2 +-
+ src/runtime_src/xrt/CMakeLists.txt                 | 2 +-
+ 8 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/runtime_src/CMakeLists.txt b/runtime_src/CMakeLists.txt
+index 772eb9ee..983ffb2b 100644
+--- a/runtime_src/CMakeLists.txt
++++ b/runtime_src/CMakeLists.txt
+@@ -106,7 +106,7 @@ target_link_libraries(xilinxopencl
+   rt
+   )
+ 
+-install (TARGETS xilinxopencl oclxdp xdp_hal_plugin LIBRARY DESTINATION ${XRT_INSTALL_DIR}/lib)
++install (TARGETS xilinxopencl oclxdp xdp_hal_plugin LIBRARY DESTINATION $ENV{libdir})
+ 
+ add_subdirectory(core)
+ 
+diff --git a/runtime_src/core/common/CMakeLists.txt b/runtime_src/core/common/CMakeLists.txt
+index 7aacd047..9a6844a1 100644
+--- a/runtime_src/core/common/CMakeLists.txt
++++ b/runtime_src/core/common/CMakeLists.txt
+@@ -33,7 +33,7 @@ target_link_libraries(xrt_coreutil
+   uuid
+   )
+ 
+-install (TARGETS xrt_coreutil LIBRARY DESTINATION ${XRT_INSTALL_DIR}/lib)
++install (TARGETS xrt_coreutil LIBRARY DESTINATION $ENV{libdir})
+ 
+ # The scheduler object files are for auto config of scheduler. These
+ # files reference xrt_core symbols, hence are excluded from
+diff --git a/runtime_src/core/edge/common_em/CMakeLists.txt b/runtime_src/core/edge/common_em/CMakeLists.txt
+index b0346176..4c085d06 100755
+--- a/runtime_src/core/edge/common_em/CMakeLists.txt
++++ b/runtime_src/core/edge/common_em/CMakeLists.txt
+@@ -48,4 +48,4 @@ target_link_libraries(common_em
+   rt
+   )
+ 
+-install (TARGETS common_em LIBRARY DESTINATION ${XRT_INSTALL_DIR}/lib)
++install (TARGETS common_em LIBRARY DESTINATION $ENV{libdir})
+diff --git a/runtime_src/core/edge/hw_em/CMakeLists.txt b/runtime_src/core/edge/hw_em/CMakeLists.txt
+index 63c19b59..c3e4ba3c 100644
+--- a/runtime_src/core/edge/hw_em/CMakeLists.txt
++++ b/runtime_src/core/edge/hw_em/CMakeLists.txt
+@@ -35,4 +35,4 @@ target_link_libraries(xrt_hwemu
+   rt
+   )
+ 
+-install (TARGETS xrt_hwemu LIBRARY DESTINATION ${XRT_INSTALL_DIR}/lib)
++install (TARGETS xrt_hwemu LIBRARY DESTINATION $ENV{libdir})
+diff --git a/runtime_src/core/edge/sw_em/CMakeLists.txt b/runtime_src/core/edge/sw_em/CMakeLists.txt
+index 95edee0e..83853742 100755
+--- a/runtime_src/core/edge/sw_em/CMakeLists.txt
++++ b/runtime_src/core/edge/sw_em/CMakeLists.txt
+@@ -37,4 +37,4 @@ target_link_libraries(xrt_swemu
+   uuid
+   )
+ 
+-install (TARGETS xrt_swemu LIBRARY DESTINATION ${XRT_INSTALL_DIR}/lib)
++install (TARGETS xrt_swemu LIBRARY DESTINATION $ENV{libdir})
+diff --git a/runtime_src/core/edge/user/CMakeLists.txt b/runtime_src/core/edge/user/CMakeLists.txt
+index 6fc21b24..4d7ba194 100644
+--- a/runtime_src/core/edge/user/CMakeLists.txt
++++ b/runtime_src/core/edge/user/CMakeLists.txt
+@@ -54,4 +54,4 @@ target_link_libraries(xrt_core
+   boost_system
+   )
+ 
+-install (TARGETS xrt_core LIBRARY DESTINATION ${XRT_INSTALL_DIR}/lib)
++install (TARGETS xrt_core LIBRARY DESTINATION $ENV{libdir})
+diff --git a/runtime_src/xdp/CMakeLists.txt b/runtime_src/xdp/CMakeLists.txt
+index 7bd819f1..038fe90e 100644
+--- a/runtime_src/xdp/CMakeLists.txt
++++ b/runtime_src/xdp/CMakeLists.txt
+@@ -86,7 +86,7 @@ add_library(xdp SHARED ${XRT_XDP_ALL_SRC})
+ add_dependencies(xdp xrt_core xilinxopencl)
+ target_link_libraries (xdp xrt_core xilinxopencl)
+ 
+-install (TARGETS xdp LIBRARY DESTINATION ${XRT_INSTALL_DIR}/lib)
++install (TARGETS xdp LIBRARY DESTINATION $ENV{libdir})
+ 
+ install (FILES "${XRT_XDP_PROFILE_XMA_PLUGIN_DIR}/xma_profile.h" DESTINATION ${XRT_INSTALL_INCLUDE_DIR})
+ 
+diff --git a/runtime_src/xrt/CMakeLists.txt b/runtime_src/xrt/CMakeLists.txt
+index 52af2c7c..e0762107 100644
+--- a/runtime_src/xrt/CMakeLists.txt
++++ b/runtime_src/xrt/CMakeLists.txt
+@@ -50,4 +50,4 @@ add_library(xrt++ SHARED ${XRT_SRC}
+ set_target_properties(xrt++ PROPERTIES VERSION ${XRT_VERSION_STRING}
+   SOVERSION ${XRT_SOVERSION})
+ 
+-install (TARGETS xrt++ LIBRARY DESTINATION ${XRT_INSTALL_DIR}/lib)
++install (TARGETS xrt++ LIBRARY DESTINATION $ENV{libdir})
