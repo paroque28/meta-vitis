@@ -1,0 +1,65 @@
+From 815ab0ef7982037d16b783dfa5c10c82b4d4a456 Mon Sep 17 00:00:00 2001
+From: OpenEmbedded <pablo.rodriguez-quesada@windriver.com>
+Date: Thu, 2 Apr 2020 20:11:19 +0000
+Subject: [PATCH] dts/xilinx: Add XRT DTS
+
+xilinx Runtime (XRT) needs a specific node in the DTB.
+
+Signed-off-by: Pablo Rodriguez <pablo.rodriguez-quesada@windriver.com>
+---
+ .../boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts  |  2 +-
+ xlnk_dts_fragment_mpsoc.dts                   | 29 +++++++++++++++++++
+ 2 files changed, 30 insertions(+), 1 deletion(-)
+ create mode 100644 xlnk_dts_fragment_mpsoc.dts
+
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts
+index 6c702f2674e3..1401007effa9 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts
+@@ -8,7 +8,7 @@
+  */
+ 
+ #include "zynqmp-zcu102-revB.dts"
+-
++#include "xlnk_dts_fragment_mpsoc.dts"
+ / {
+ 	model = "ZynqMP ZCU102 Rev1.0";
+ 	compatible = "xlnx,zynqmp-zcu102-rev1.0", "xlnx,zynqmp-zcu102", "xlnx,zynqmp";
+diff --git a/arch/arm64/boot/dts/xilinx/xlnk_dts_fragment_mpsoc.dts b/arch/arm64/boot/dts/xilinx/xlnk_dts_fragment_mpsoc.dts
+new file mode 100644
+index 000000000000..e3133dd67546
+--- /dev/null
++++ b/arch/arm64/boot/dts/xilinx/xlnk_dts_fragment_mpsoc.dts
+@@ -0,0 +1,29 @@
++
++&amba {
++	axi_intc_0: axi-interrupt-ctrl {
++		#interrupt-cells = <2>;
++		compatible = "xlnx,xps-intc-1.00.a";
++		interrupt-controller;
++		reg = <0x0 0x80020000 0x0 0x1000>;
++		xlnx,kind-of-intr = <0x0>;
++		xlnx,num-intr-inputs = <0x20>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 89 4>;
++	};
++
++	zyxclmm_drm {
++		compatible = "xlnx,zocl";
++		status = "okay";
++		xlnx,pr-isolation-addr = <0x0 0x80070000>;
++		interrupt-parent = <&axi_intc_0>;
++		interrupts = <0  4>, <1  4>, <2  4>, <3  4>,
++			     <4  4>, <5  4>, <6  4>, <7  4>,
++			     <8  4>, <9  4>, <10 4>, <11 4>,
++			     <12 4>, <13 4>, <14 4>, <15 4>,
++			     <16 4>, <17 4>, <18 4>, <19 4>,
++			     <20 4>, <21 4>, <22 4>, <23 4>,
++			     <24 4>, <25 4>, <26 4>, <27 4>,
++			     <28 4>, <29 4>, <30 4>, <31 4>;
++	};
++};
++
+-- 
+2.23.0
+
