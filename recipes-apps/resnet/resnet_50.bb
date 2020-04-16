@@ -22,14 +22,19 @@ do_install() {
 
   install -d ${D}${libdir}
   install -m 0655 ${S}/DPU-TRD/app/Vitis/models/libdpumodelresnet50.so ${D}${libdir}
+
+  install -m 0755 -d ${D}/usr/lib
+  install -m 0655 ${S}/DPU-TRD/app/Vitis/models/libdpumodelresnet50.so ${D}/usr/lib
+
 }
 
 
-FILES_${PN} += "/opt/ /opt/Vitis-AI/ /opt/Vitis-AI/* ${libdir}"
+FILES_${PN} += "/opt/ /opt/Vitis-AI/ /opt/Vitis-AI/* ${libdir} /usr/lib"
 
 INSANE_SKIP_${PN} = "ldflags"
 INSANE_SKIP_${PN}-dev += "dev-elf"
- 
+INSANE_SKIP_${PN}-libs = "dev-so"
+INSANE_SKIP_${PN}-dbg = "dev-so"
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_SYSROOT_STRIP = "1"
 SOLIBS = ".so"
