@@ -8,9 +8,9 @@ xilinx Runtime (XRT) needs a specific node in the DTB.
 Signed-off-by: Pablo Rodriguez <pablo.rodriguez-quesada@windriver.com>
 ---
  .../boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts  |  2 +-
- xlnk_dts_fragment_mpsoc.dts                   | 29 +++++++++++++++++++
+ xlnx_xrt_dts_fragment_mpsoc.dts                   | 29 +++++++++++++++++++
  2 files changed, 30 insertions(+), 1 deletion(-)
- create mode 100644 xlnk_dts_fragment_mpsoc.dts
+ create mode 100644 xlnx_xrt_dts_fragment_mpsoc.dts
 
 diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts
 index 6c702f2674e3..1401007effa9 100644
@@ -21,15 +21,15 @@ index 6c702f2674e3..1401007effa9 100644
  
  #include "zynqmp-zcu102-revB.dts"
 -
-+#include "xlnk_dts_fragment_mpsoc.dts"
++#include "xlnx_xrt_dts_fragment_mpsoc.dts"
  / {
  	model = "ZynqMP ZCU102 Rev1.0";
  	compatible = "xlnx,zynqmp-zcu102-rev1.0", "xlnx,zynqmp-zcu102", "xlnx,zynqmp";
-diff --git a/arch/arm64/boot/dts/xilinx/xlnk_dts_fragment_mpsoc.dts b/arch/arm64/boot/dts/xilinx/xlnk_dts_fragment_mpsoc.dts
+diff --git a/arch/arm64/boot/dts/xilinx/xlnx_xrt_dts_fragment_mpsoc.dts b/arch/arm64/boot/dts/xilinx/xlnk_dts_fragment_mpsoc.dts
 new file mode 100644
 index 000000000000..e3133dd67546
 --- /dev/null
-+++ b/arch/arm64/boot/dts/xilinx/xlnk_dts_fragment_mpsoc.dts
++++ b/arch/arm64/boot/dts/xilinx/xlnx_xrt_dts_fragment_mpsoc.dts
 @@ -0,0 +1,29 @@
 +
 +&amba {
