@@ -13,15 +13,8 @@ SRC_URI = "git://github.com/Xilinx/Vitis-AI.git;branch=v1.0 \
 
 SRCREV = "${AUTOREV}"
 
-inherit module-base
-
 S = "${WORKDIR}/git"
-DEPENDS += " opencv"
-RDEPENDS_${PN} += " libopencv-core \
-                    libopencv-imgcodecs \
-                    libopencv-highgui \
-                    libopencv-imgproc \
-                    "
+RDEPENDS_${PN} += "xrt"
 
 do_install() {
              install -m 0755 -d ${D}${libdir}
